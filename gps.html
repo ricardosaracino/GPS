@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Watching Position</title>
+
+    <script>
+
+        // Set global variable
+        let watchID;
+        let positionLat = null;
+        let positionLong = null;
+
+        function start() {
+            if (navigator.geolocation) {
+
+                const options = {
+                    enableHighAccuracy: true,
+                    maximumAge: 0
+                };
+
+                watchID = navigator.geolocation.watchPosition(successCallback, showError, options);
+            } else {
+                alert("Sorry, your browser does not support HTML5 geolocation.");
+            }
+        }
+
+        function successCallback(position) {
+
+            // Set previous location
+            positionLat = position.coords.latitude;
+
+            positionLong = position.coords.longitude;
+
+            // Get current position
+            let positionInfo = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + ")";
+
+            positionInfo += ' <a target="_blank" href="https://www.google.com/maps/place/' + position.coords.latitude + ',' + position.coords.longitude + '">Map</a>'
+
+            document.getElementById("result").innerHTML = positionInfo;
+        }
+
+        function showError(error) {
+            let err = document.getElementById("result");
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    err.innerHTML = "User denied the request for Geolocation."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    err.innerHTML = "Location information is unavailable."
+                    break;
+                case error.TIMEOUT:
+                    err.innerHTML = "The request to get user location timed out."
+                    break;
+                default:
+                    err.innerHTML = "An unknown error occurred."
+                    break;
+            }
+        }
+
+        // Initialise the whole system (above)
+        window.onload = start;
+
+    </script>
+</head>
+<body>
+<div id="result">
+    <!--Position information will be inserted here-->
+</div>
+</body>
+</html>
